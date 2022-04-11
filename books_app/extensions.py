@@ -4,6 +4,8 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from books_app.config import Config
 import os
+# from .models import User
+from .models import User
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -15,5 +17,12 @@ db = SQLAlchemy(app)
 ###########################
 
 # TODO: Add authentication setup code here!
+login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
+login_manager.init_app(app)
 
-bcrypt = None # remove me! (needed so that server will run)
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+bcrypt = Bcrypt(app) # remove me! (needed so that server will run)
