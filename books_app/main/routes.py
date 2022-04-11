@@ -25,51 +25,58 @@ def homepage():
 @main.route('/create_book', methods=['GET', 'POST'])
 @login_required
 def create_book():
-    form = BookForm()
+    book_form = BookForm()
 
     # if form was submitted and contained no errors
-    if form.validate_on_submit(): 
+    if book_form.validate_on_submit(): 
         new_book = Book(
-            title=form.title.data,
-            publish_date=form.publish_date.data,
-            author=form.author.data,
-            audience=form.audience.data,
-            genres=form.genres.data
+            title=book_form.title.data,
+            publish_date=book_form.publish_date.data,
+            author=book_form.author.data,
+            audience=book_form.audience.data,
+            genres=book_form.genres.data
         )
         db.session.add(new_book)
         db.session.commit()
 
         flash('New book was created successfully.')
         return redirect(url_for('main.book_detail', book_id=new_book.id))
-    return render_template('create_book.html', form=form)
+    return render_template('create_book.html', form=book_form)
 
 
 @main.route('/create_author', methods=['GET', 'POST'])
 @login_required
 def create_author():
-    # TODO: Make an AuthorForm instance
+    author_form = AuthorForm()
 
-    # TODO: If the form was submitted and is valid, create a new Author object
-    # and save to the database, then flash a success message to the user and
-    # redirect to the homepage
+    if author_form.validate_on_submit(): 
+        new_author = Author(
+            name=author_form.name.data,
+            biography=author_form.biography.data
+        )
+        db.session.add(new_author)
+        db.session.commit()
 
-    # TODO: Send the form object to the template, and use it to render the form
-    # fields
-    return render_template('create_author.html')
+        flash('New author was created successfully.')
+        return redirect(url_for('main.homepage'))
+    return render_template('create_author.html', form=author_form)
 
 
 @main.route('/create_genre', methods=['GET', 'POST'])
 @login_required
 def create_genre():
     # TODO: Make a GenreForm instance
+    genre_form = GenreForm()
+    if genre_form.validate_on_submit(): 
+        new_genre = Genre(
+            name=genre_form.name.data
+        )
+        db.session.add(new_genre)
+        db.session.commit()
 
-    # TODO: If the form was submitted and is valid, create a new Genre object
-    # and save to the database, then flash a success message to the user and
-    # redirect to the homepage
-
-    # TODO: Send the form object to the template, and use it to render the form
-    # fields
-    return render_template('create_genre.html')
+        flash('New genre was created successfully.')
+        return redirect(url_for('main.homepage'))
+    return render_template('create_genre.html', form=genre_form)
 
 
 @main.route('/book/<book_id>', methods=['GET', 'POST'])

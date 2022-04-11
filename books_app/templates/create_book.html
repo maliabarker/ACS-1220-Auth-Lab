@@ -18,7 +18,7 @@
         {{ form.publish_date.label }}
         {{ form.publish_date(placeholder="YYYY-mm-dd") }}
         <ul>
-        {% for error in form.title.errors %}
+        {% for error in form.publish_date.errors %}
             <li class="error">{{ error }}</li>
         {% endfor %}
         </ul>
